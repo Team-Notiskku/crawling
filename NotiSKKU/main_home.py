@@ -58,3 +58,4 @@ for idx, notice in enumerate(notices, start=1):
     for key, value in notice.items():
         print(f"  {key}: {value}")
     print("-" * 40)
+
