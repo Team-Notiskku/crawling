@@ -6,7 +6,7 @@ from google.oauth2 import service_account
 # ✅ Google Sheets API 인증
 SERVICE_ACCOUNT_FILE = "credentials.json" 
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
-SPREADSHEET_ID = "1rn5W6x50T9H0Nijobqwi616Le77j3nrBACfDXDqVsjA"
+SPREADSHEET_ID = "1RPTHVpyEJb4mZs9sz10E5OwIpZB-3YJcfrg5H7dFqhM"
 SHEET_NAME = "시트1"
 
 creds = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
