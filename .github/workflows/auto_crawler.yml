@@ -33,7 +33,7 @@ jobs:
           cat credentials.json  # 파일 내용 확인 (디버깅 용도)
 
       - name: 환경 변수 설정
-        run: echo "GOOGLE_SHEETS_CRED=$(pwd)/credentials.json" >> $GITHUB_ENV      
+        run: echo "GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/credentials.json" >> $GITHUB_ENV      
 
       - name: Playwright 설치
         run: python3 -m playwright install
