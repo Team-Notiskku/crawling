@@ -9,7 +9,7 @@ SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 SPREADSHEET_ID = "1rn5W6x50T9H0Nijobqwi616Le77j3nrBACfDXDqVsjA"  # Google Sheets ID (URL에서 확인 가능)
 SHEET_NAME = "시트1"  # Google Sheets의 시트 이름
 
-CREDENTIALS_JSON = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
+CREDENTIALS_JSON = os.getenv("GOOGLE_SHEETS_CRED")
 
 if CREDENTIALS_JSON:
     with open("credentials.json", "w") as f:
