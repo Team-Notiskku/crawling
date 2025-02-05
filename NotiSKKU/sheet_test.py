@@ -1,28 +1,7 @@
-# import os
-# import json
 from playwright.sync_api import sync_playwright
 from urllib.parse import urljoin
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
-
-
-# # ✅ 환경 변수에서 Credentials JSON 경로 가져오기
-# CREDENTIALS_PATH = os.getenv("GOOGLE_APPLICATION_CREDENTIALS", "credentials.json")
-
-# # ✅ credentials.json 파일이 존재하는지 확인
-# if not os.path.exists(CREDENTIALS_PATH):
-#     raise ValueError(f"❌ {CREDENTIALS_PATH} 파일이 존재하지 않습니다.")
-
-# # ✅ credentials.json 파일이 비어있는지 확인
-# if os.path.getsize(CREDENTIALS_PATH) == 0:
-#     raise ValueError("❌ credentials.json 파일이 비어 있습니다!")
-
-# # ✅ JSON 파일이 정상적으로 로드되는지 확인
-# try:
-#     with open(CREDENTIALS_PATH, "r") as f:
-#         json.load(f)
-# except json.JSONDecodeError as e:
-#     raise ValueError(f"❌ JSON 파일이 올바르지 않습니다: {e}")
 
 # ✅ Google Sheets API 인증
 SERVICE_ACCOUNT_FILE = "credentials.json" 
