@@ -4,22 +4,33 @@ from urllib.parse import urljoin
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
 
-# ✅ Google Sheets API 설정
+
+# ✅ 환경 변수에서 Credentials JSON 경로 가져오기
+CREDENTIALS_PATH = os.getenv("GOOGLE_APPLICATION_CREDENTIALS", "credentials.json")
+
+# ✅ credentials.json 파일이 존재하는지 확인
+if not os.path.exists(CREDENTIALS_PATH):
+    raise ValueError(f"❌ {CREDENTIALS_PATH} 파일이 존재하지 않습니다.")
+
+# ✅ credentials.json 파일이 비어있는지 확인
+if os.path.getsize(CREDENTIALS_PATH) == 0:
+    raise ValueError("❌ credentials.json 파일이 비어 있습니다!")
+
+# ✅ JSON 파일이 정상적으로 로드되는지 확인
+try:
+    with open(CREDENTIALS_PATH, "r") as f:
+        json.load(f)
+except json.JSONDecodeError as e:
+    raise ValueError(f"❌ JSON 파일이 올바르지 않습니다: {e}")
+
+# ✅ Google Sheets API 인증
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
-SPREADSHEET_ID = "1rn5W6x50T9H0Nijobqwi616Le77j3nrBACfDXDqVsjA"  # Google Sheets ID (URL에서 확인 가능)
-SHEET_NAME = "시트1"  # Google Sheets의 시트 이름
+SPREADSHEET_ID = "1rn5W6x50T9H0Nijobqwi616Le77j3nrBACfDXDqVsjA"
+SHEET_NAME = "시트1"
 
-CREDENTIALS_JSON = os.getenv("GOOGLE_SHEETS_CRED")
-
-if CREDENTIALS_JSON:
-    with open("credentials.json", "w") as f:
-        f.write(CREDENTIALS_JSON)  # Secret에서 가져온 JSON을 credentials.json 파일로 생성
-
-    creds = service_account.Credentials.from_service_account_file("credentials.json", scopes=SCOPES)
-    service = build("sheets", "v4", credentials=creds)
-    print("✅ Google Sheets API 인증 성공!")
-else:
-    raise ValueError("❌ GOOGLE_APPLICATION_CREDENTIALS 환경 변수가 설정되지 않았습니다.")
+creds = service_account.Credentials.from_service_account_file(CREDENTIALS_PATH, scopes=SCOPES)
+service = build("sheets", "v4", credentials=creds)
+print("✅ Google Sheets API 인증 성공!")
 
 def update_google_sheets(data):
     """크롤링한 데이터를 Google Sheets에 업로드"""
