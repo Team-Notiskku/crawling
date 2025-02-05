@@ -1,17 +1,25 @@
+import os
 from playwright.sync_api import sync_playwright
 from urllib.parse import urljoin
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
 
 # ✅ Google Sheets API 설정
-SERVICE_ACCOUNT_FILE = "notiskku-449608-4c2aa194efc2.json"  # Google 서비스 계정 JSON 키 파일
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 SPREADSHEET_ID = "1rn5W6x50T9H0Nijobqwi616Le77j3nrBACfDXDqVsjA"  # Google Sheets ID (URL에서 확인 가능)
 SHEET_NAME = "시트1"  # Google Sheets의 시트 이름
 
-# Google Sheets API 인증
-creds = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
-service = build("sheets", "v4", credentials=creds)
+CREDENTIALS_JSON = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
+
+if CREDENTIALS_JSON:
+    with open("credentials.json", "w") as f:
+        f.write(CREDENTIALS_JSON)  # Secret에서 가져온 JSON을 credentials.json 파일로 생성
+
+    creds = service_account.Credentials.from_service_account_file("credentials.json", scopes=SCOPES)
+    service = build("sheets", "v4", credentials=creds)
+    print("✅ Google Sheets API 인증 성공!")
+else:
+    raise ValueError("❌ GOOGLE_APPLICATION_CREDENTIALS 환경 변수가 설정되지 않았습니다.")
 
 def update_google_sheets(data):
     """크롤링한 데이터를 Google Sheets에 업로드"""
