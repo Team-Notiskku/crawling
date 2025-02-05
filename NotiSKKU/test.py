@@ -68,8 +68,6 @@ def get_notice(latest_id):
     return notices
 
 def update_google_sheets(new_notices, next_row):
-    """크롤링한 데이터를 Google Sheets에서 next_row부터 채우기"""
-    
     if not new_notices:
         print("✅ 새로운 공지가 없습니다.")
         return
