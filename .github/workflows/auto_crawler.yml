@@ -29,8 +29,8 @@ jobs:
 
       - name: Google Credentials 파일 생성
         run: |
-          echo "${{ secrets.GOOGLE_SHEETS_CRED }}" > NotiSKKU/credentials.json
-          cat NotiSKKU/credentials.json  # 파일 내용 확인 (디버깅 용도)
+          echo "${{ secrets.GOOGLE_SHEETS_CRED }}" > credentials.json
+          cat credentials.json  # 파일 내용 확인 (디버깅 용도)
 
       - name: 환경 변수 설정
         run: echo "GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/NotiSKKU/credentials.json" >> $GITHUB_ENV      
