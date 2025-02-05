@@ -17,12 +17,7 @@ if not os.path.exists(CREDENTIALS_PATH):
 if os.path.getsize(CREDENTIALS_PATH) == 0:
     raise ValueError("❌ credentials.json 파일이 비어 있습니다!")
 
-# ✅ JSON 파일이 정상적으로 로드되는지 확인
-try:
-    with open(CREDENTIALS_PATH, "r") as f:
-        json.load(f)
-except json.JSONDecodeError as e:
-    raise ValueError(f"❌ JSON 파일이 올바르지 않습니다: {e}")
+
 
 # ✅ Google Sheets API 인증
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
