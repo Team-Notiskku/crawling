@@ -21,7 +21,7 @@ jobs:
       - name: Python 패키지 설치
         run: |
           pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install playwright google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client pandas
 
       - name: Google Credentials 파일 생성
         run: echo "${{ secrets.GOOGLE_SHEETS_CRED }}" > credentials.json
@@ -31,5 +31,5 @@ jobs:
 
       - name: 크롤링 실행 및 Google Sheets 업데이트
         env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/credentials.json
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/NotiSKKU/credentials.json
         run: python3 sheet_test.py
