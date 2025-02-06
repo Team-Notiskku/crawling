@@ -1,4 +1,13 @@
-# XPath
+## makefile 사용 (채연 로컬)
+### NotiSKKU 디렉토리 내 
+1. make init -> initial_data.py (100개 데이터 초기 크롤링)
+2. make test -> sheet_test.py (초기 데이터 이외 추가 데이터 업데이트)
+
+
+
+
+
+### XPath
 
 ``` python
 # 카테고리
