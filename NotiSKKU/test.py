@@ -2,6 +2,7 @@ from playwright.sync_api import sync_playwright
 from urllib.parse import urljoin
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
+from datetime import datetime
 
 SERVICE_ACCOUNT_FILE = "notiskku-449608-4c2aa194efc2.json" ## 병합 시 수정 필요 (credentials.json)
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
@@ -86,7 +87,24 @@ def update_google_sheets(new_notices, next_row):
 
     print(f"✅ Google Sheets에 {len(new_notices)}개의 새로운 공지를 추가했습니다. (시작 행: {next_row})")
 
+def update_last_modified_time():
+    """Google Sheets의 특정 셀에 최종 편집 시각 업데이트"""
+    last_modified_time = datetime.now().strftime("최종 편집 일시: %Y-%m-%d %H시 %M분 %S초")
+    range_name = f"{SHEET_NAME}!A1"  
+
+    body = {"values": [[last_modified_time]]}
+
+    service.spreadsheets().values().update(
+        spreadsheetId=SPREADSHEET_ID,
+        range=range_name,
+        valueInputOption="RAW",
+        body=body
+    ).execute()
+
+    print(f"✅ 최종 편집 시각 업데이트 완료: {last_modified_time}")
+
 latest_id, next_row = get_latest()
 latest_id = int(latest_id)
 new_notices = get_notice(latest_id)
 update_google_sheets(new_notices, next_row)
+update_last_modified_time()
