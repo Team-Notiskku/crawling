@@ -173,3 +173,4 @@ cython_debug/
 
 NotiSKKU/*.json
 NotiSKKU/department/*.json
+NotiSKKU/major/*.json
