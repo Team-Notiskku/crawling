@@ -27,7 +27,7 @@ MAJOR_URLS = {
     "컴퓨터교육과": "https://comedu.skku.edu/comedu/notice.do",
     "한문교육과": "https://skb.skku.edu/klccedu/community/notice.do",
     "디자인학과": "https://design.skku.edu/design/notice_dept.do",
-    "무용학과": "https://dance.skku.edu/dance/index.do",
+    "무용학과": "https://dance.skku.edu/dance/notice.do",
     "연기예술학과": "https://acting.skku.edu/acting/notice.do",
     "의상학과": "https://fashion.skku.edu/fashion/notice.do",
     "영상학과": "https://ott.skku.edu/ftm-skku-edu/notice",
@@ -58,27 +58,6 @@ MAJOR_URLS = {
     "에너지학과": "https://energy.skku.edu/energy/notice.do",
     "응용AI융합학부": "https://aicon.skku.edu/aicon/notice.do"
 }
-
-# MAJOR_XPATHS = {
-#     "국어국문학과": {
-#         "category": '//*[@id="jwxe_main_content"]/div/div/div/ul/li[{}]/dl/dt/span[1]',
-#         "title": '//*[@id="jwxe_main_content"]/div/div/div/ul/li[{}]/dl/dt/a',
-#         "id": '//*[@id="jwxe_main_content"]/div/div/div/ul/li[{}]/dl/dd/ul/li[1]',
-#         "uploader": '//*[@id="jwxe_main_content"]/div/div/div/ul/li[{}]/dl/dd/ul/li[2]',
-#         "date": '//*[@id="jwxe_main_content"]/div/div/div/ul/li[{}]/dl/dd/ul/li[3]',
-#         "views": '//*[@id="jwxe_main_content"]/div/div/div[2]/ul/li[{}]/dl/dd/ul/li[4]/span',
-#         "link": '//*[@id="jwxe_main_content"]/div/div/div/ul/li[{}]/dl/dt/a'
-#     },
-#     "독어독문학과": {
-#         "category": '//*[@id="jwxe_main_content"]/div/div/div/ul/li[{}]/dl/dt/span[1]',
-#         "title": '//*[@id="jwxe_main_content"]/div/div/div/ul/li[{}]/dl/dt/a',
-#         "id": '//*[@id="jwxe_main_content"]/div/div/div/ul/li[{}]/dl/dd/ul/li[1]',
-#         "uploader": '//*[@id="jwxe_main_content"]/div/div/div/ul/li[{}]/dl/dd/ul/li[2]',
-#         "date": '//*[@id="jwxe_main_content"]/div/div/div/ul/li[{}]/dl/dd/ul/li[3]',
-#         "views": '//*[@id="jwxe_main_content"]/div/div/div[2]/ul/li[{}]/dl/dd/ul/li[4]/span',
-#         "link": '//*[@id="jwxe_main_content"]/div/div/div/ul/li[{}]/dl/dt/a'
-#     }
-# }
 
 MAJOR_XPATHS = {}
 for major in MAJOR_URLS.keys():
