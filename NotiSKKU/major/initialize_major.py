@@ -42,7 +42,6 @@ def get_notice(name):
             notice_url = f"?mode=list&&articleLimit=10&article.offset={offset}"
             full_url = urljoin(base_url, notice_url)
             
-            #print(f"📢 페이지 {page_num + 1} (offset={offset}) 크롤링 중...")
             page.goto(full_url)
             page.wait_for_load_state("load")
 
@@ -70,8 +69,6 @@ def get_notice(name):
 
                 except Exception as e:
                     print(f"❌ {i}번 공지 크롤링 오류 발생: {e}, {name}")
-                    
-                    #print(f"❌ {i}번 공지 크롤링 오류 발생")
                     browser.close()
                     notices[1:] = sorted(notices[1:], key=lambda x: x[0])
                     return notices
@@ -116,14 +113,13 @@ other_major = ["무용학과", "영상학과", "화학과", "전자전기공학�
                "나노공학과", "화학공학/고분자공학부"]
 
 for name in SHEET_NAMES:
-    # 이미 성공한 학과
-    if name in done_major:
-        continue
-    # 상단 고정 공지가 있는 학과
-    if name in pin_major:
-        print(f"😭 상단 고정 공지가 있습니다: {name}")
-        continue
-    notices_data = get_notice(name)
+    if name in other_major:
+        notices_data = get_other_notice(name)
+    elif name in pin_major:
+        notices_data = get_pinned_notice(name)
+    else :
+        notices_data = get_notice(name)
+    
     if notices_data:
         update_google_sheets(name, notices_data)
     else:

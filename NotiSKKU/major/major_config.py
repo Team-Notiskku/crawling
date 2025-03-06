@@ -59,8 +59,26 @@ MAJOR_URLS = {
     "응용AI융합학부": "https://aicon.skku.edu/aicon/notice.do"
 }
 
+
+pin_major = ["독어독문학과", "러시아어문학과", "사학과", "영어영문학과", "프랑스어문학과", 
+             "한문학과", "사회복지학과", "사회학과", "소비자학과", "글로벌경영학과",
+             "수학과", "글로벌융합학부 공통", "소프트웨어학과", "건축학과(건축학계열)",
+             "기계공학부", "신소재공학부", "시스템경영공학과", "바이오메카트로닉스학과",
+             "식품생명공학과", "글로벌바이오메디컬공학과"]
+
+other_major = ["무용학과", "영상학과", "화학과", "전자전기공학부", "건설환경공학부",
+            "나노공학과", "화학공학/고분자공학부"]
+
 MAJOR_XPATHS = {}
 for major in MAJOR_URLS.keys():
+
+    if (major in pin_major):
+        MAJOR_XPATHS[major] = {}
+        continue
+    if (major in other_major):
+        MAJOR_XPATHS[major] = {}
+        continue
+
     MAJOR_XPATHS[major] = {
         "category": '//*[@id="jwxe_main_content"]/div/div/div/ul/li[{}]/dl/dt/span[1]',
         "title": '//*[@id="jwxe_main_content"]/div/div/div/ul/li[{}]/dl/dt/a',
@@ -70,3 +88,4 @@ for major in MAJOR_URLS.keys():
         "views": '//*[@id="jwxe_main_content"]/div/div/div[2]/ul/li[{}]/dl/dd/ul/li[4]/span',
         "link": '//*[@id="jwxe_main_content"]/div/div/div/ul/li[{}]/dl/dt/a'
     }
+
