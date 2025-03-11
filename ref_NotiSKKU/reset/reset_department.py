@@ -1,5 +1,3 @@
-from playwright.sync_api import sync_playwright
-from urllib.parse import urljoin
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
 from configs.config_department import DEPT_URLS
@@ -13,14 +11,11 @@ creds = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FI
 service = build("sheets", "v4", credentials=creds)
 
 for name in SHEET_NAMES:
-    range_name = f"{name}!A1:Z"  # 전체 범위 지정
-    body = {"values": []}  # 빈 데이터로 초기화
+    range_name = f"{name}"  
 
-    service.spreadsheets().values().update(
+    service.spreadsheets().values().clear(
         spreadsheetId=SPREADSHEET_ID,
-        range=range_name,
-        valueInputOption="RAW",
-        body=body
+        range=range_name  
     ).execute()
 
-    print("초기화 완료")
+    print(f"{name} 시트 초기화 완료")
