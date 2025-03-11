@@ -10,3 +10,5 @@ reset_common:
 init_dept:
 	python3 -m initializer.initialize_department
 	
+init_common:
+	python3 -m initializer.initialize_common
