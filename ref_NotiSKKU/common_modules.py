@@ -78,6 +78,7 @@ def get_general(base_url, xpaths, latest_id):
 
             for i in range(1, 11):
                 try:
+                    print(i)
                     id = page.locator(xpaths["id"].format(i)).inner_text(timeout=1000)
                     try:
                         category = page.locator(xpaths["category"].format(i)).inner_text(timeout=1000)

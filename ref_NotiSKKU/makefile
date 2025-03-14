@@ -12,3 +12,6 @@ init_dept:
 	
 init_common:
 	python3 -m initializer.initialize_common
+
+init_major:
+	python3 -m initializer.initialize_major
