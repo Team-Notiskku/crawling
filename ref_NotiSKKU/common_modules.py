@@ -78,7 +78,6 @@ def get_general(base_url, xpaths, latest_id):
 
             for i in range(1, 11):
                 try:
-                    print(i)
                     id = page.locator(xpaths["id"].format(i)).inner_text(timeout=1000)
                     try:
                         category = page.locator(xpaths["category"].format(i)).inner_text(timeout=1000)
@@ -100,7 +99,7 @@ def get_general(base_url, xpaths, latest_id):
                     notices.append([int(id), category, title, date, uploader, views, link])
 
                 except Exception as e:
-                    print(f"❌ {i}번 공지 크롤링 오류 발생: {e}")
+                    print(f"{i-1}번 공지 이후로 공지가 없습니다. 크롤링을 종료합니다.")
                     browser.close()
                     notices[1:] = sorted(notices[1:], key=lambda x: x[0])
                     return notices
@@ -109,3 +108,71 @@ def get_general(base_url, xpaths, latest_id):
         notices[1:] = sorted(notices[1:], key=lambda x: x[0])
 
     return notices
+
+def get_pinned(base_url, xpaths, latest_id, is_arch):
+    max_pages = 10 
+    
+    if latest_id == 0:  # initializer일 때
+        notices = [["ID", "category", "title", "date", "uploader", "views", "link"]]
+    else:
+        notices = []  # updater일 때
+
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+        page = browser.new_page()
+
+        for page_num in range(max_pages):
+            offset = page_num * 10
+            notice_url = f"?mode=list&&articleLimit=10&article.offset={offset}"
+            full_url = urljoin(base_url, notice_url)
+            
+            page.goto(full_url)
+            page.wait_for_load_state("load")
+            if is_arch == 1:
+                pinned_notices = page.locator('//*[@id="item_body"]/div[2]/div[1]/div/div[2]/div/div/div/ul/li/dl/dt[contains(@class, "board-list-content-top")]')
+            else:
+                pinned_notices = page.locator('//*[@id="jwxe_main_content"]/div/div/div[2]/ul/li/dl/dt[contains(@class, "board-list-content-top")]')
+            pinned_count = pinned_notices.count()  # 고정 공지 개수
+
+            notice_count = 0
+            i = pinned_count + 1  # 고정 공지 이후부터 시작
+
+            while notice_count < 10:
+                try:
+                    id = page.locator(xpaths["id"].format(i)).inner_text(timeout=1000)
+                    try:
+                        category = page.locator(xpaths["category"].format(i)).inner_text(timeout=1000)
+                    except:
+                        category = "없음"
+
+                    title = page.locator(xpaths["title"].format(i)).inner_text(timeout=1000)
+                    date = page.locator(xpaths["date"].format(i)).inner_text(timeout=1000)
+                    uploader = page.locator(xpaths["uploader"].format(i)).inner_text(timeout=1000)
+                    if xpaths["views"] != "":
+                        views = page.locator(xpaths["views"].format(i)).inner_text(timeout=1000)
+                    else:
+                        views = 'null'
+                    link = page.locator(xpaths["link"].format(i)).get_attribute("href")
+
+                    id = id[3:] 
+                    link = urljoin(base_url, link)
+
+                    notices.append([int(id), category, title, date, uploader, views, link])
+
+                    notice_count += 1 
+                    i += 1
+
+                except Exception as e:
+                    print(f"{i-1}번 공지 이후로 공지가 없습니다. 크롤링을 종료합니다.")
+                    browser.close()
+                    notices[1:] = sorted(notices[1:], key=lambda x: x[0])
+                    return notices
+
+        browser.close()
+        notices[1:] = sorted(notices[1:], key=lambda x: x[0])
+
+    return notices
+
+def get_exceptions(SHEET_NAME, base_url, xpaths, latest_id):
+    notice = []
+    return notice
