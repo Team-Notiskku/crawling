@@ -15,3 +15,6 @@ init_common:
 
 init_major:
 	python3 -m initializer.initialize_major
+
+update_major:
+	python3 -m updater.update_major

@@ -22,7 +22,21 @@ def get_latest(SPREADSHEET_ID, SHEET_NAME):
         latest_id = values[-1]
         return latest_id[0], len(values) + 1 
     else:
-        return 0, 1
+        return -1, 1
+
+def get_latest_date(SPREADSHEET_ID, SHEET_NAME):
+    range_name = f"{SHEET_NAME}!D:D"  
+    result = service.spreadsheets().values().get(
+        spreadsheetId=SPREADSHEET_ID, range=range_name
+    ).execute()
+
+    values = result.get("values", [])
+
+    if(len(values) != 0):
+        latest_date = values[-1]
+        return latest_date[0]
+    else:
+        return -1
 
 def update_google_sheets(SPREADSHEET_ID, SHEET_NAME, data, next_row):
     if not data:
@@ -59,7 +73,7 @@ def update_last_modified_time(SPREADSHEET_ID, SHEET_NAME):
 def get_general(base_url, xpaths, latest_id):
     max_pages = 10 
     
-    if latest_id == 0: # initializer일때
+    if latest_id == -1: # initializer일때
         notices = [["ID", "category", "title", "date", "uploader", "views", "link"]]
     else:
         notices = [] # updater일떄
@@ -79,6 +93,11 @@ def get_general(base_url, xpaths, latest_id):
             for i in range(1, 11):
                 try:
                     id = page.locator(xpaths["id"].format(i)).inner_text(timeout=1000)
+                    id = id[3:]
+                    if int(id) == latest_id:
+                        browser.close()
+                        notices[1:] = sorted(notices[1:], key=lambda x: x[0])  
+                        return notices 
                     try:
                         category = page.locator(xpaths["category"].format(i)).inner_text(timeout=1000)
                     except:
@@ -93,7 +112,6 @@ def get_general(base_url, xpaths, latest_id):
                         views = 'null'
                     link = page.locator(xpaths["link"].format(i)).get_attribute("href")
 
-                    id = id[3:] 
                     link = urljoin(base_url, link)
 
                     notices.append([int(id), category, title, date, uploader, views, link])
@@ -112,7 +130,7 @@ def get_general(base_url, xpaths, latest_id):
 def get_pinned(base_url, xpaths, latest_id, is_arch):
     max_pages = 10 
     
-    if latest_id == 0:  # initializer일 때
+    if latest_id == -1:  # initializer일 때
         notices = [["ID", "category", "title", "date", "uploader", "views", "link"]]
     else:
         notices = []  # updater일 때
@@ -140,6 +158,11 @@ def get_pinned(base_url, xpaths, latest_id, is_arch):
             while notice_count < 10:
                 try:
                     id = page.locator(xpaths["id"].format(i)).inner_text(timeout=1000)
+                    id = id[3:]
+                    if int(id) == latest_id:
+                        browser.close()
+                        notices[1:] = sorted(notices[1:], key=lambda x: x[0])  
+                        return notices 
                     try:
                         category = page.locator(xpaths["category"].format(i)).inner_text(timeout=1000)
                     except:
@@ -154,7 +177,6 @@ def get_pinned(base_url, xpaths, latest_id, is_arch):
                         views = 'null'
                     link = page.locator(xpaths["link"].format(i)).get_attribute("href")
 
-                    id = id[3:] 
                     link = urljoin(base_url, link)
 
                     notices.append([int(id), category, title, date, uploader, views, link])
@@ -197,6 +219,10 @@ def get_exceptions(SHEET_NAME, base_url, xpaths, latest_id):
                         title = page.locator(xpaths["title"].format(i)).inner_text(timeout=1000)
                         date = page.locator(xpaths["date"].format(i)).inner_text(timeout=1000)
                         date = date[14:]
+                        if date == latest_id:
+                            browser.close()
+                            notices[1:] = sorted(notices[1:], key=lambda x: x[0])  
+                            return notices 
                         uploader = page.locator(xpaths["uploader"].format(i)).inner_text(timeout=1000)
                         uploader = uploader[9:]
                         views = page.locator(xpaths["views"].format(i)).inner_text(timeout=1000)
