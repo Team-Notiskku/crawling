@@ -66,16 +66,86 @@ pin_major = ["독어독문학과", "러시아어문학과", "사학과", "영어
              "기계공학부", "신소재공학부", "시스템경영공학과", "바이오메카트로닉스학과",
              "식품생명공학과", "글로벌바이오메디컬공학과", "중어중문학과", "통계학과"]
 
-other_major = ["무용학과", "영상학과", "화학과", "전자전기공학부", "건설환경공학부",
+other_major = ["영상학과", "화학과", "건설환경공학부",
             "나노공학과", "화학공학/고분자공학부"]
 
 MAJOR_XPATHS = {}
 for major in MAJOR_URLS.keys():
-    
-    if (major in other_major):
-        MAJOR_XPATHS[major] = {}
+
+    ## other_major 예외처리
+    if major == "영상학과":
+        MAJOR_XPATHS[major] = {
+        "category": '',
+        "title": '',
+        "id": '',
+        "uploader": '',
+        "date": '',
+        "views": '',
+        "link": ''
+        }
         continue
 
+    if major == "화학과":
+        MAJOR_XPATHS[major] = {
+        "category": '',
+        "title": '//*[@id="jwxe_main_content"]/div/div/div[1]/ul/li[{}]/h3/a',
+        "id": '',
+        "uploader": '//*[@id="jwxe_main_content"]/div/div/div[1]/ul/li[{}]/ul/li[2]',
+        "date": '//*[@id="jwxe_main_content"]/div/div/div[1]/ul/li[{}]/ul/li[1]',
+        "views": '//*[@id="jwxe_main_content"]/div/div/div[1]/ul/li[{}]/ul/li[3]',
+        "link": '//*[@id="jwxe_main_content"]/div/div/div[1]/ul/li[{}]/h3/a'
+        }
+        continue
+
+    if major == "전자전기공학부":
+        MAJOR_XPATHS[major] = {
+        "category": '//*[@id="jwxe_main_content"]/div/div/div/ul/li[{}]/dl/dt/span[1]',
+        "title": '//*[@id="jwxe_main_content"]/div/div/div/ul/li[{}]/dl/dt/a',
+        "id": '//*[@id="jwxe_main_content"]/div/div/div/ul/li[{}]/dl/dd/ul/li[1]',
+        "uploader": '//*[@id="jwxe_main_content"]/div/div/div/ul/li[{}]/dl/dd/ul/li[2]',
+        "date": '//*[@id="jwxe_main_content"]/div/div/div/ul/li[{}]/dl/dd/ul/li[3]',
+        "views": '',
+        "link": '//*[@id="jwxe_main_content"]/div/div/div/ul/li[{}]/dl/dt/a'
+        }
+        continue
+
+    if major == "건설환경공학부":
+        MAJOR_XPATHS[major] = {
+        "category": '',
+        "title": '',
+        "id": '',
+        "uploader": '',
+        "date": '',
+        "views": '',
+        "link": ''
+        }
+        continue
+
+    if major == "나노공학과":
+        MAJOR_XPATHS[major] = {
+        "category": '',
+        "title": '',
+        "id": '',
+        "uploader": '',
+        "date": '',
+        "views": '',
+        "link": ''
+        }
+        continue
+
+    if major == "화학공학/고분자공학부":
+        MAJOR_XPATHS[major] = {
+        "category": '',
+        "title": '',
+        "id": '',
+        "uploader": '',
+        "date": '',
+        "views": '',
+        "link": ''
+        }
+        continue
+
+    ## pinned_major 예외처리
     if major == "건축학과(건축학계열)":
         MAJOR_XPATHS[major] = {
         "category": '//*[@id="item_body"]/div[2]/div[1]/div/div[2]/div/div/div/ul/li[{}]/dl/dt/span[1]',
@@ -87,7 +157,8 @@ for major in MAJOR_URLS.keys():
         "link": '//*[@id="item_body"]/div[2]/div[1]/div/div[2]/div/div/div/ul/li[{}]/dl/dt/a'
         }
         continue
-
+    
+    ## 그 외 모든 경우
     MAJOR_XPATHS[major] = {
         "category": '//*[@id="jwxe_main_content"]/div/div/div/ul/li[{}]/dl/dt/span[1]',
         "title": '//*[@id="jwxe_main_content"]/div/div/div/ul/li[{}]/dl/dt/a',

@@ -1,7 +1,7 @@
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
 from configs.config_major import MAJOR_URLS, MAJOR_XPATHS, pin_major, other_major
-from common_modules import get_general, update_google_sheets, update_last_modified_time, get_pinned
+from common_modules import get_general, update_google_sheets, update_last_modified_time, get_pinned, get_exceptions
 
 SERVICE_ACCOUNT_FILE = "notiskku-449608-4c2aa194efc2.json" ## 병합 시 수정 필요 (credentials.json)
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
@@ -12,21 +12,18 @@ creds = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FI
 service = build("sheets", "v4", credentials=creds)
 
 for name in SHEET_NAMES:
-    print()
+    print(f"{name} 크롤링을 시작합니다.")
+
     if name == "건축학과(건축학계열)":
         data = get_pinned(MAJOR_URLS[name], MAJOR_XPATHS[name], 0, 1)
-    if name in pin_major:
+    elif name in pin_major:
         data = get_pinned(MAJOR_URLS[name], MAJOR_XPATHS[name], 0, 0)
     elif name in other_major:
-        print(f"**** {name}은 별도의 UI를 사용합니다. ****")
-        continue
-        #data = get_exceptions(DEPT_URLS[name], DEPT_XPATHS[name], 0)
+        data = get_exceptions(name, MAJOR_URLS[name], MAJOR_XPATHS[name], 0)
     else:
-        continue
         data = get_general(MAJOR_URLS[name], MAJOR_XPATHS[name], 0)
-        print("data get!")
+    
     if data:
         update_google_sheets(SPREADSHEET_ID, name, data, 2)
     
     update_last_modified_time(SPREADSHEET_ID, name)
-

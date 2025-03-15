@@ -174,5 +174,52 @@ def get_pinned(base_url, xpaths, latest_id, is_arch):
     return notices
 
 def get_exceptions(SHEET_NAME, base_url, xpaths, latest_id):
-    notice = []
-    return notice
+    if SHEET_NAME == "화학과":
+        max_pages = 10 
+        notices = []
+
+        with sync_playwright() as p:
+            browser = p.chromium.launch(headless=True)
+            page = browser.new_page()
+
+            for page_num in range(max_pages):
+                offset = page_num * 10
+                notice_url = f"?mode=list&&articleLimit=10&article.offset={offset}"
+                full_url = urljoin(base_url, notice_url)
+                
+                page.goto(full_url)
+                page.wait_for_load_state("load")
+
+                for i in range(1, 11):
+                    try:
+                        id = 0
+                        category = "없음"
+                        title = page.locator(xpaths["title"].format(i)).inner_text(timeout=1000)
+                        date = page.locator(xpaths["date"].format(i)).inner_text(timeout=1000)
+                        date = date[14:]
+                        uploader = page.locator(xpaths["uploader"].format(i)).inner_text(timeout=1000)
+                        uploader = uploader[9:]
+                        views = page.locator(xpaths["views"].format(i)).inner_text(timeout=1000)
+                        views = views[6:]
+                        link = page.locator(xpaths["link"].format(i)).get_attribute("href")
+                         
+                        link = urljoin(base_url, link)
+
+                        notices.append([int(id), category, title, date, uploader, views, link])
+
+                    except Exception as e:
+                        print(f"{i-1}번 공지 이후로 공지가 없습니다. 크롤링을 종료합니다.")
+                        browser.close()
+                        notices.reverse()
+                        if latest_id == 0: # initializer일때
+                            notices.insert(0, ["ID", "category", "title", "date", "uploader", "views", "link"])
+                        return notices
+
+            browser.close()
+            notices.reverse()
+            if latest_id == 0: # initializer일때
+                notices.insert(0, ["ID", "category", "title", "date", "uploader", "views", "link"])
+
+        return notices
+    else:
+        return []
