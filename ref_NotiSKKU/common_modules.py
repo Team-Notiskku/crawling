@@ -18,7 +18,7 @@ def get_latest(SPREADSHEET_ID, SHEET_NAME):
 
     values = result.get("values", [])
 
-    if(len(values) != 0):
+    if(len(values) > 1):
         latest_id = values[-1]
         return latest_id[0], len(values) + 1 
     else:
