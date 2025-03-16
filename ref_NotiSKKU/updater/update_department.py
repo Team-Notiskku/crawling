@@ -12,7 +12,7 @@ creds = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FI
 service = build("sheets", "v4", credentials=creds)
 
 for name in SHEET_NAMES:
-    print(f"{name} 크롤링을 시작합니다.")
+    #print(f"{name} 크롤링을 시작합니다.")
     latest_id, next_row = get_latest(SPREADSHEET_ID, name)
     latest_id = int(latest_id)
     if name in pin_dept:
