@@ -71,7 +71,7 @@ def update_last_modified_time(SPREADSHEET_ID, SHEET_NAME):
         body=body
     ).execute()
 
-    #print(f"{SHEET_NAME} 최종 편집 시각 업데이트 완료")
+    print(f"{SHEET_NAME} 최종 편집 시각 업데이트 완료")
 
 def get_general(base_url, xpaths, latest_id):
     max_pages = 10 
