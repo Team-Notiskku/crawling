@@ -1,4 +1,4 @@
-name: Auto Crawling & Update
+name: Major Auto Crawler
 
 on:
   schedule:

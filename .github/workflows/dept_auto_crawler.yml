@@ -1,4 +1,4 @@
-name: Auto Crawling & Update
+name: Department Auto Crawler
 
 on:
   schedule:
