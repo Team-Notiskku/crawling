@@ -2,7 +2,7 @@ name: Auto Crawling & Update
 
 on:
   schedule:
-    - cron: "0 * * * *"  # 매시간 실행 (UTC 기준)
+    - cron: "0 10 * * *"    # 매일 한국시간 19:00 (UTC 10:00) 실행
   workflow_dispatch:  # 수동 실행 가능 (GitHub에서 직접 실행 가능)
 
 jobs:
@@ -11,7 +11,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: NotiSKKU  # NotiSKKU 폴더에서 실행
+        working-directory: ref_NotiSKKU  # ref_NotiSKKU 폴더에서 실행
 
     steps:
       - name: GitHub 레포지토리 체크아웃
@@ -30,7 +30,6 @@ jobs:
       - name: Google Credentials 파일 생성
         run: |
           echo "${{ secrets.GOOGLE_SHEETS_CRED }}" | base64 --decode > credentials.json
-          cat credentials.json  # 파일 내용 확인 (디버깅 용도)
 
       - name: 환경 변수 설정
         run: echo "GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/credentials.json" >> $GITHUB_ENV      
@@ -39,4 +38,4 @@ jobs:
         run: python3 -m playwright install
 
       - name: 크롤링 실행 및 Google Sheets 업데이트
-        run: python3 sheet_test.py
+        run: make update_dept

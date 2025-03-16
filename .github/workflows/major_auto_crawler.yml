@@ -1,0 +1,41 @@
+name: Auto Crawling & Update
+
+on:
+  schedule:
+    - cron: "0 10 * * *"    # 매일 한국시간 19:00 (UTC 10:00) 실행
+  workflow_dispatch:  # 수동 실행 가능 (GitHub에서 직접 실행 가능)
+
+jobs:
+  crawl:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ref_NotiSKKU  # ref_NotiSKKU 폴더에서 실행
+
+    steps:
+      - name: GitHub 레포지토리 체크아웃
+        uses: actions/checkout@v3
+
+      - name: Python 3.9 설치
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      - name: Python 패키지 설치
+        run: |
+          pip install --upgrade pip
+          pip install playwright google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client pandas
+
+      - name: Google Credentials 파일 생성
+        run: |
+          echo "${{ secrets.GOOGLE_SHEETS_CRED }}" | base64 --decode > credentials.json
+
+      - name: 환경 변수 설정
+        run: echo "GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/credentials.json" >> $GITHUB_ENV      
+
+      - name: Playwright 설치
+        run: python3 -m playwright install
+
+      - name: 크롤링 실행 및 Google Sheets 업데이트
+        run: make update_major
