@@ -3,7 +3,7 @@ from google.oauth2 import service_account
 from configs.config_major import MAJOR_URLS, MAJOR_XPATHS, pin_major, other_major
 from common_modules import get_general, update_google_sheets, update_last_modified_time, get_pinned, get_exceptions, get_latest, get_latest_date
 
-SERVICE_ACCOUNT_FILE = "notiskku-449608-4c2aa194efc2.json" ## 병합 시 수정 필요 (credentials.json)
+SERVICE_ACCOUNT_FILE = "credentials.json" ## 병합 시 수정 필요 (credentials.json)
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 SPREADSHEET_ID = "1XOv61iZQiPwc2CeqU4lnZsnmpUIhp4Tnjcsk84mHihU"  ## 병합 시 수정 필요 (1RPTHVpyEJb4mZs9sz10E5OwIpZB-3YJcfrg5H7dFqhM)
 SHEET_NAMES = list(MAJOR_URLS.keys())
