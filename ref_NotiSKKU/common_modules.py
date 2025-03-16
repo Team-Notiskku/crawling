@@ -238,23 +238,20 @@ def get_exceptions(SHEET_NAME, base_url, xpaths, latest_id):
                         print(f"{i-1}번 공지 이후로 공지가 없습니다. 크롤링을 종료합니다.")
                         browser.close()
                         notices.reverse()
-                        if latest_id == 0: # initializer일때
+                        if latest_id == -1: # initializer일때
                             notices.insert(0, ["ID", "category", "title", "date", "uploader", "views", "link"])
                         return notices
 
             browser.close()
             notices.reverse()
-            if latest_id == 0: # initializer일때
+            if latest_id == -1: # initializer일때
                 notices.insert(0, ["ID", "category", "title", "date", "uploader", "views", "link"])
 
         return notices
     elif SHEET_NAME == "약학대학":
         max_pages = 10 
     
-        if latest_id == -1: # initializer일때
-            notices = [["ID", "category", "title", "date", "uploader", "views", "link"]]
-        else:
-            notices = [] # updater일떄
+        notices = [] # updater일떄
 
         with sync_playwright() as p:
             browser = p.chromium.launch(headless=True)
@@ -280,6 +277,12 @@ def get_exceptions(SHEET_NAME, base_url, xpaths, latest_id):
                             title = title[5:]
                         else:
                             id = 0
+                        if int(id) == latest_id:
+                            browser.close()
+                            notices.reverse()
+                            if latest_id == -1: # initializer일때
+                                notices.insert(0, ["ID", "category", "title", "date", "uploader", "views", "link"])
+                            return notices 
                         link = urljoin(base_url, link)
 
                         notices.append([int(id), category, title, date, uploader, views, link])
@@ -291,7 +294,9 @@ def get_exceptions(SHEET_NAME, base_url, xpaths, latest_id):
                         return notices
 
             browser.close()
-            notices[1:] = sorted(notices[1:], key=lambda x: x[0])
+            notices.reverse()
+            if latest_id == -1: # initializer일때
+                notices.insert(0, ["ID", "category", "title", "date", "uploader", "views", "link"])
 
         return notices
     elif SHEET_NAME == "의과대학":

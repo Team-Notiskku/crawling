@@ -18,3 +18,6 @@ init_major:
 
 update_major:
 	python3 -m updater.update_major
+
+update_dept:
+	python3 -m updater.update_department
