@@ -4,6 +4,7 @@ from googleapiclient.discovery import build
 from google.oauth2 import service_account
 from datetime import datetime
 import re
+import pytz 
 
 SERVICE_ACCOUNT_FILE = "credentials.json" ## 병합 시 수정 필요 (credentials.json)
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
@@ -57,7 +58,8 @@ def update_google_sheets(SPREADSHEET_ID, SHEET_NAME, data, next_row):
     print(f"Google Sheets에 {len(data)}개의 새로운 공지를 추가했습니다. (시작 행: {next_row})")
 
 def update_last_modified_time(SPREADSHEET_ID, SHEET_NAME):
-    last_modified_time = datetime.now().strftime("최종 편집 일시: %Y-%m-%d %H시 %M분 %S초")
+    kst = pytz.timezone('Asia/Seoul')
+    last_modified_time = datetime.now(kst).strftime("최종 편집 일시: %Y-%m-%d %H시 %M분 %S초")
     range_name = f"{SHEET_NAME}!A1"  
 
     body = {"values": [[last_modified_time]]}
