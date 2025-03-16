@@ -21,3 +21,6 @@ update_major:
 
 update_dept:
 	python3 -m updater.update_department
+
+update_common:
+	python3 -m updater.update_common

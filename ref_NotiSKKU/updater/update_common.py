@@ -2,7 +2,7 @@ from playwright.sync_api import sync_playwright
 from urllib.parse import urljoin
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
-from common_modules import get_general, update_google_sheets, update_last_modified_time
+from common_modules import get_general, update_google_sheets, update_last_modified_time, get_latest
 
 SERVICE_ACCOUNT_FILE = "notiskku-449608-4c2aa194efc2.json" ## 병합 시 수정 필요 (credentials.json)
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
@@ -22,8 +22,10 @@ XPATH = {
 creds = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
 service = build("sheets", "v4", credentials=creds)
 
-data = get_general(BASE_URL, XPATH, 0)
+latest_id, next_row = get_latest(SPREADSHEET_ID, SHEET_NAME)
+latest_id = int(latest_id)
+data = get_general(BASE_URL, XPATH, latest_id)
 if data:
-    update_google_sheets(SPREADSHEET_ID, SHEET_NAME, data, 2)
+    update_google_sheets(SPREADSHEET_ID, SHEET_NAME, data, next_row)
 update_last_modified_time(SPREADSHEET_ID, SHEET_NAME)
 
