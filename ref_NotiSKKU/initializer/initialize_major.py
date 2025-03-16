@@ -13,7 +13,7 @@ service = build("sheets", "v4", credentials=creds)
 
 for name in SHEET_NAMES:
     print(f"{name} 크롤링을 시작합니다.")
-
+ 
     if name == "건축학과(건축학계열)":
         data = get_pinned(MAJOR_URLS[name], MAJOR_XPATHS[name], -1, 1)
     elif name in pin_major:

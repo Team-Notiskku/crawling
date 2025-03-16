@@ -24,11 +24,37 @@ has_views_dept = ["경제대학", "정보통신대학", "소프트웨어융합�
 
 DEPT_XPATHS = {}
 for department in DEPT_URLS.keys():
-    if (department in pin_dept): # 상단 고정 공지 있는 경우
-        DEPT_XPATHS[department] = {}
-    elif (department in other_dept): # UI 자체가 다른 경우
-        DEPT_XPATHS[department] = {}
-    elif (department in has_views_dept) : # 조회수 필드가 있는 경우
+
+    ## other majors 예외처리
+    if department == "약학대학":
+        DEPT_XPATHS[department] = {
+            "category": '',
+            "title": '//*[@id="board_list"]/li[{}]/a/article/h2',
+            "id": '',
+            "uploader": '//*[@id="board_list"]/li[{}]/a/article/p/span[1]',
+            "date": '//*[@id="board_list"]/li[{}]/a/article/p/span[2]',
+            "views": '',
+            "link": '//*[@id="board_list"]/li[{}]/a'
+        }
+        continue
+    
+    if department == "의과대학":
+        DEPT_XPATHS[department] = {
+            "category": '',
+            "title": '//*[@id="jwxe_main_content"]/div/div/ul/li[{}]/dl/dt/a',
+            "id": '//*[@id="jwxe_main_content"]/div/div/ul/li[{}]/dl/dd/ul/li[1]',
+            "uploader": '//*[@id="jwxe_main_content"]/div/div/ul/li[{}]/dl/dd/ul/li[2]',
+            "date": '//*[@id="jwxe_main_content"]/div/div/ul/li[{}]/dl/dd/ul/li[3]',
+            "views": '//*[@id="jwxe_main_content"]/div/div/ul/li[{}]/dl/dd/ul/li[4]',
+            "link": '//*[@id="jwxe_main_content"]/div/div/ul/li[{}]/dl/dt/a'
+        }
+        continue
+    
+    # if (department in pin_dept): # 상단 고정 공지 있는 경우
+    #     DEPT_XPATHS[department] = {}
+        
+    ## 조회수 필드가 있는 경우
+    if (department in has_views_dept or department == "경영대학") : 
         DEPT_XPATHS[department] = {
             "category": '//*[@id="jwxe_main_content"]/div/div/div[2]/ul/li[{}]/dl/dt/span',
             "title": '//*[@id="jwxe_main_content"]/div/div/div[2]/ul/li[{}]/dl/dt/a',
@@ -38,13 +64,15 @@ for department in DEPT_URLS.keys():
             "views": '//*[@id="jwxe_main_content"]/div/div/div[2]/ul/li[{}]/dl/dd/ul/li[4]/span',
             "link": '//*[@id="jwxe_main_content"]/div/div/div[2]/ul/li[{}]/dl/dt/a'
         }
-    else : # 위의 경우 외에 가장 일반적인 경우
-        DEPT_XPATHS[department] = { 
-            "category": '//*[@id="jwxe_main_content"]/div/div/div/ul/li[{}]/dl/dt/span[1]',
-            "title": '//*[@id="jwxe_main_content"]/div/div/div/ul/li[{}]/dl/dt/a',
-            "id": '//*[@id="jwxe_main_content"]/div/div/div/ul/li[{}]/dl/dd/ul/li[1]',
-            "uploader": '//*[@id="jwxe_main_content"]/div/div/div/ul/li[{}]/dl/dd/ul/li[2]',
-            "date": '//*[@id="jwxe_main_content"]/div/div/div/ul/li[{}]/dl/dd/ul/li[3]',
-            "views": "",
-            "link": '//*[@id="jwxe_main_content"]/div/div/div/ul/li[{}]/dl/dt/a'
-        }
+        continue
+    
+    ## 그 외 모든 경우
+    DEPT_XPATHS[department] = { 
+        "category": '//*[@id="jwxe_main_content"]/div/div/div/ul/li[{}]/dl/dt/span[1]',
+        "title": '//*[@id="jwxe_main_content"]/div/div/div/ul/li[{}]/dl/dt/a',
+        "id": '//*[@id="jwxe_main_content"]/div/div/div/ul/li[{}]/dl/dd/ul/li[1]',
+        "uploader": '//*[@id="jwxe_main_content"]/div/div/div/ul/li[{}]/dl/dd/ul/li[2]',
+        "date": '//*[@id="jwxe_main_content"]/div/div/div/ul/li[{}]/dl/dd/ul/li[3]',
+        "views": "",
+        "link": '//*[@id="jwxe_main_content"]/div/div/div/ul/li[{}]/dl/dt/a'
+    }
