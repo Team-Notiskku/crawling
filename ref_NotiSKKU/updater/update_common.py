@@ -1,5 +1,3 @@
-from playwright.sync_api import sync_playwright
-from urllib.parse import urljoin
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
 from common_modules import get_general, update_google_sheets, update_last_modified_time, get_latest

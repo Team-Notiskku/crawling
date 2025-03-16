@@ -1,5 +1,3 @@
-from playwright.sync_api import sync_playwright
-from urllib.parse import urljoin
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
 from configs.config_department import DEPT_URLS, DEPT_XPATHS, pin_dept, other_dept, has_views_dept
