@@ -3,6 +3,7 @@ from urllib.parse import urljoin
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
 from datetime import datetime
+import re
 
 SERVICE_ACCOUNT_FILE = "notiskku-449608-4c2aa194efc2.json" ## 병합 시 수정 필요 (credentials.json)
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
@@ -260,25 +261,25 @@ def get_exceptions(SHEET_NAME, base_url, xpaths, latest_id):
             page = browser.new_page()
 
             for page_num in range(max_pages):
-                offset = page_num * 10
-                notice_url = f"?mode=list&&articleLimit=10&article.offset={offset}"
-                full_url = urljoin(base_url, notice_url)
+                cur_page = page_num+1
+                full_url = f"{base_url}&page={cur_page}#subcon"
                 
                 page.goto(full_url)
                 page.wait_for_load_state("load")
-
                 for i in range(1, 11):
                     try:
-                        id = 0
                         category = "없음"
-                        print(category)
                         title = page.locator(xpaths["title"].format(i)).inner_text(timeout=1000)
-                        print(title)
                         date = page.locator(xpaths["date"].format(i)).inner_text(timeout=1000)
                         uploader = page.locator(xpaths["uploader"].format(i)).inner_text(timeout=1000)
                         views = 'null'
                         link = page.locator(xpaths["link"].format(i)).get_attribute("href")
-
+                        match = re.match(r"^\d+", title)
+                        if match:
+                            id = match.group()
+                            title = title[5:]
+                        else:
+                            id = 0
                         link = urljoin(base_url, link)
 
                         notices.append([int(id), category, title, date, uploader, views, link])
@@ -302,7 +303,7 @@ def get_exceptions(SHEET_NAME, base_url, xpaths, latest_id):
             notices = [] # updater일떄
 
         with sync_playwright() as p:
-            browser = p.chromium.launch(headless=False, devtools=True)
+            browser = p.chromium.launch(headless=True)
             page = browser.new_page()
 
             for page_num in range(max_pages):
@@ -318,7 +319,7 @@ def get_exceptions(SHEET_NAME, base_url, xpaths, latest_id):
                         id = page.locator(xpaths["id"].format(i)).evaluate("el => el.innerText + window.getComputedStyle(el, '::after').content")
                         id = id.split(".")[-1].strip(' []"')
                         if int(id) == latest_id:
-                            #browser.close()
+                            browser.close()
                             notices[1:] = sorted(notices[1:], key=lambda x: x[0])  
                             return notices 
                         category = "없음"
@@ -337,14 +338,13 @@ def get_exceptions(SHEET_NAME, base_url, xpaths, latest_id):
 
                     except Exception as e:
                         print(f"{i-1}번 공지 이후로 공지가 없습니다. 크롤링을 종료합니다.")
-                        #browser.close()
+                        browser.close()
                         notices[1:] = sorted(notices[1:], key=lambda x: x[0])
                         return notices
 
-            #browser.close()
+            browser.close()
             notices[1:] = sorted(notices[1:], key=lambda x: x[0])
 
         return notices
-        
     else:
         return []

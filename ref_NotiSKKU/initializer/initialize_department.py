@@ -13,32 +13,16 @@ SHEET_NAMES = list(DEPT_URLS.keys())
 creds = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
 service = build("sheets", "v4", credentials=creds)
 
-# for name in SHEET_NAMES:
-#     print(f"{name} 크롤링을 시작합니다.")
-#     if name in pin_dept:
-#         data = get_pinned(DEPT_URLS[name], DEPT_XPATHS[name], -1, 0)
-#     elif name == "약학대학":
-#         data = get_exceptions(name, DEPT_URLS[name], DEPT_XPATHS[name], -1)
-#     else:
-#         data = get_general(DEPT_URLS[name], DEPT_XPATHS[name], -1)
-    
-#     if data:
-#         update_google_sheets(SPREADSHEET_ID, name, data, 2)
-    
-#     update_last_modified_time(SPREADSHEET_ID, name)
-
 for name in SHEET_NAMES:
-    # if name == "약학대학":
-    #     data = get_exceptions(name, DEPT_URLS[name], DEPT_XPATHS[name], -1)
-    #     if len(data) > 2:
-    #         update_google_sheets(SPREADSHEET_ID, name, data, 2)
-    #         update_last_modified_time(SPREADSHEET_ID, name)
-    #     else:
-    #         continue
-    if name == "의과대학":
+    print(f"{name} 크롤링을 시작합니다.")
+    if name in pin_dept:
+        data = get_pinned(DEPT_URLS[name], DEPT_XPATHS[name], -1, 0)
+    elif name in other_dept:
         data = get_exceptions(name, DEPT_URLS[name], DEPT_XPATHS[name], -1)
-        if len(data) > 2:
-            update_google_sheets(SPREADSHEET_ID, name, data, 2)
-            update_last_modified_time(SPREADSHEET_ID, name)
-        else:
-            continue
+    else:
+        data = get_general(DEPT_URLS[name], DEPT_XPATHS[name], -1)
+    
+    if data:
+        update_google_sheets(SPREADSHEET_ID, name, data, 2)
+    
+    update_last_modified_time(SPREADSHEET_ID, name)
