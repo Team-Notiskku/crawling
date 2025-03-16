@@ -21,21 +21,30 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: "3.9"
+          cache: 'pip'
 
       - name: Python 패키지 설치
         run: |
           pip install --upgrade pip
-          pip install playwright google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client pandas
+          pip install -r requirements.txt
+
+      - name: Playwright 브라우저 캐싱
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/ms-playwright 
+          key: playwright-${{ runner.os }}
+          restore-keys: |
+            playwright-
+      
+      - name: Playwright 설치 (캐싱 활용)
+        run: python3 -m playwright install --with-deps
 
       - name: Google Credentials 파일 생성
         run: |
           echo "${{ secrets.GOOGLE_SHEETS_CRED }}" | base64 --decode > credentials.json
 
       - name: 환경 변수 설정
-        run: echo "GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/credentials.json" >> $GITHUB_ENV      
-
-      - name: Playwright 설치
-        run: python3 -m playwright install
+        run: echo "GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/credentials.json" >> $GITHUB_ENV 
 
       - name: 크롤링 실행 및 Google Sheets 업데이트
         run: make update_dept
