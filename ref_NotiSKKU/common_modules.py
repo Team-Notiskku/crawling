@@ -122,11 +122,17 @@ def get_general(base_url, xpaths, latest_id):
                 except Exception as e:
                     print(f"{i-1}번 공지 이후로 공지가 없습니다. 크롤링을 종료합니다.")
                     browser.close()
-                    notices[1:] = sorted(notices[1:], key=lambda x: x[0])
+                    if latest_id == -1:
+                        notices[1:] = sorted(notices[1:], key=lambda x: x[0])
+                    else:
+                        notices[0:] = sorted(notices[0:], key=lambda x: x[0])
                     return notices
 
         browser.close()
-        notices[1:] = sorted(notices[1:], key=lambda x: x[0])
+        if latest_id == -1:
+            notices[1:] = sorted(notices[1:], key=lambda x: x[0])
+        else:
+            notices[0:] = sorted(notices[0:], key=lambda x: x[0])
 
     return notices
 
@@ -190,11 +196,17 @@ def get_pinned(base_url, xpaths, latest_id, is_arch):
                 except Exception as e:
                     print(f"{i-1}번 공지 이후로 공지가 없습니다. 크롤링을 종료합니다.")
                     browser.close()
-                    notices[1:] = sorted(notices[1:], key=lambda x: x[0])
+                    if latest_id == -1:
+                        notices[1:] = sorted(notices[1:], key=lambda x: x[0])
+                    else:
+                        notices[0:] = sorted(notices[0:], key=lambda x: x[0])
                     return notices
 
         browser.close()
-        notices[1:] = sorted(notices[1:], key=lambda x: x[0])
+        if latest_id == -1:
+            notices[1:] = sorted(notices[1:], key=lambda x: x[0])
+        else:
+            notices[0:] = sorted(notices[0:], key=lambda x: x[0])
 
     return notices
 
@@ -346,11 +358,17 @@ def get_exceptions(SHEET_NAME, base_url, xpaths, latest_id):
                     except Exception as e:
                         print(f"{i-1}번 공지 이후로 공지가 없습니다. 크롤링을 종료합니다.")
                         browser.close()
-                        notices[1:] = sorted(notices[1:], key=lambda x: x[0])
+                        if latest_id == -1:
+                            notices[1:] = sorted(notices[1:], key=lambda x: x[0])
+                        else:
+                            notices[0:] = sorted(notices[0:], key=lambda x: x[0])
                         return notices
 
-            browser.close()
+        browser.close()
+        if latest_id == -1:
             notices[1:] = sorted(notices[1:], key=lambda x: x[0])
+        else:
+            notices[0:] = sorted(notices[0:], key=lambda x: x[0])
 
         return notices
     else:
