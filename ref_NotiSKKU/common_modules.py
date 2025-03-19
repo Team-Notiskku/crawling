@@ -6,7 +6,8 @@ from datetime import datetime
 import re
 import pytz 
 
-SERVICE_ACCOUNT_FILE = "credentials.json" ## 병합 시 수정 필요 (credentials.json)
+SERVICE_ACCOUNT_FILE = "notiskku-449608-4c2aa194efc2.json"
+## SERVICE_ACCOUNT_FILE = "credentials.json" ## 병합 시 수정 필요 (credentials.json)
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
 creds = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
@@ -76,10 +77,7 @@ def update_last_modified_time(SPREADSHEET_ID, SHEET_NAME):
 def get_general(base_url, xpaths, latest_id):
     max_pages = 10 
     
-    if latest_id == -1: # initializer일때
-        notices = [["ID", "category", "title", "date", "uploader", "views", "link"]]
-    else:
-        notices = [] # updater일떄
+    notices = [] 
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
@@ -99,7 +97,9 @@ def get_general(base_url, xpaths, latest_id):
                     id = id[3:]
                     if int(id) == latest_id:
                         browser.close()
-                        notices[1:] = sorted(notices[1:], key=lambda x: x[0])  
+                        notices.reverse()
+                        if latest_id == -1:
+                            notices.insert(0, ["ID", "category", "title", "date", "uploader", "views", "link"])
                         return notices 
                     try:
                         category = page.locator(xpaths["category"].format(i)).inner_text(timeout=1000)
@@ -122,27 +122,22 @@ def get_general(base_url, xpaths, latest_id):
                 except Exception as e:
                     print(f"{i-1}번 공지 이후로 공지가 없습니다. 크롤링을 종료합니다.")
                     browser.close()
+                    notices.reverse()
                     if latest_id == -1:
-                        notices[1:] = sorted(notices[1:], key=lambda x: x[0])
-                    else:
-                        notices[0:] = sorted(notices[0:], key=lambda x: x[0])
+                        notices.insert(0, ["ID", "category", "title", "date", "uploader", "views", "link"])
                     return notices
 
         browser.close()
+        notices.reverse()
         if latest_id == -1:
-            notices[1:] = sorted(notices[1:], key=lambda x: x[0])
-        else:
-            notices[0:] = sorted(notices[0:], key=lambda x: x[0])
+            notices.insert(0, ["ID", "category", "title", "date", "uploader", "views", "link"])
 
     return notices
 
 def get_pinned(base_url, xpaths, latest_id, is_arch):
     max_pages = 10 
     
-    if latest_id == -1:  # initializer일 때
-        notices = [["ID", "category", "title", "date", "uploader", "views", "link"]]
-    else:
-        notices = []  # updater일 때
+    notices = []  
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
@@ -170,7 +165,9 @@ def get_pinned(base_url, xpaths, latest_id, is_arch):
                     id = id[3:]
                     if int(id) == latest_id:
                         browser.close()
-                        notices[1:] = sorted(notices[1:], key=lambda x: x[0])  
+                        notices.reverse()
+                        if latest_id == -1:
+                            notices.insert(0, ["ID", "category", "title", "date", "uploader", "views", "link"])
                         return notices 
                     try:
                         category = page.locator(xpaths["category"].format(i)).inner_text(timeout=1000)
@@ -196,17 +193,15 @@ def get_pinned(base_url, xpaths, latest_id, is_arch):
                 except Exception as e:
                     print(f"{i-1}번 공지 이후로 공지가 없습니다. 크롤링을 종료합니다.")
                     browser.close()
+                    notices.reverse()
                     if latest_id == -1:
-                        notices[1:] = sorted(notices[1:], key=lambda x: x[0])
-                    else:
-                        notices[0:] = sorted(notices[0:], key=lambda x: x[0])
+                        notices.insert(0, ["ID", "category", "title", "date", "uploader", "views", "link"])
                     return notices
 
         browser.close()
+        notices.reverse()
         if latest_id == -1:
-            notices[1:] = sorted(notices[1:], key=lambda x: x[0])
-        else:
-            notices[0:] = sorted(notices[0:], key=lambda x: x[0])
+            notices.insert(0, ["ID", "category", "title", "date", "uploader", "views", "link"])
 
     return notices
 
@@ -236,7 +231,9 @@ def get_exceptions(SHEET_NAME, base_url, xpaths, latest_id):
                         date = date[14:]
                         if date == latest_id:
                             browser.close()
-                            notices[1:] = sorted(notices[1:], key=lambda x: x[0])  
+                            notices.reverse()
+                            if latest_id == -1:
+                                notices.insert(0, ["ID", "category", "title", "date", "uploader", "views", "link"])
                             return notices 
                         uploader = page.locator(xpaths["uploader"].format(i)).inner_text(timeout=1000)
                         uploader = uploader[9:]
@@ -304,7 +301,9 @@ def get_exceptions(SHEET_NAME, base_url, xpaths, latest_id):
                     except Exception as e:
                         print(f"{i-1}번 공지 이후로 공지가 없습니다. 크롤링을 종료합니다.")
                         browser.close()
-                        notices[1:] = sorted(notices[1:], key=lambda x: x[0])
+                        notices.reverse()
+                        if latest_id == -1:
+                            notices.insert(0, ["ID", "category", "title", "date", "uploader", "views", "link"])
                         return notices
 
             browser.close()
@@ -358,17 +357,15 @@ def get_exceptions(SHEET_NAME, base_url, xpaths, latest_id):
                     except Exception as e:
                         print(f"{i-1}번 공지 이후로 공지가 없습니다. 크롤링을 종료합니다.")
                         browser.close()
+                        notices.reverse()
                         if latest_id == -1:
-                            notices[1:] = sorted(notices[1:], key=lambda x: x[0])
-                        else:
-                            notices[0:] = sorted(notices[0:], key=lambda x: x[0])
+                            notices.insert(0, ["ID", "category", "title", "date", "uploader", "views", "link"])
                         return notices
 
         browser.close()
+        notices.reverse()
         if latest_id == -1:
-            notices[1:] = sorted(notices[1:], key=lambda x: x[0])
-        else:
-            notices[0:] = sorted(notices[0:], key=lambda x: x[0])
+            notices.insert(0, ["ID", "category", "title", "date", "uploader", "views", "link"])
 
         return notices
     else:
