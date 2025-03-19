@@ -22,6 +22,14 @@ jobs:
         with:
           python-version: "3.9"
           cache: 'pip'
+          
+      - name: Python 패키지 캐싱
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: pip-${{ runner.os }}-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            pip-${{ runner.os }}
 
       - name: Python 패키지 설치
         run: |
