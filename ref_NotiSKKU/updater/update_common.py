@@ -2,8 +2,8 @@ from googleapiclient.discovery import build
 from google.oauth2 import service_account
 from common_modules import get_general, update_google_sheets, update_last_modified_time, get_latest
 
-SERVICE_ACCOUNT_FILE = "notiskku-449608-4c2aa194efc2.json"
-##SERVICE_ACCOUNT_FILE = "credentials.json" ## 병합 시 수정 필요 (credentials.json)
+##SERVICE_ACCOUNT_FILE = "notiskku-449608-4c2aa194efc2.json"
+SERVICE_ACCOUNT_FILE = "credentials.json" ## 병합 시 수정 필요 (credentials.json)
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 SPREADSHEET_ID = "1RPTHVpyEJb4mZs9sz10E5OwIpZB-3YJcfrg5H7dFqhM"  ## 병합 시 수정 필요 (1RPTHVpyEJb4mZs9sz10E5OwIpZB-3YJcfrg5H7dFqhM)
 SHEET_NAME = "시트1"
